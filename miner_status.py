@@ -82,13 +82,17 @@ def get_incentive_change(sn_id, fields):
     return incentive_data
 
 def add_incentive_change(title, fields):
-    _fields = fields.copy()
-    change_data = get_incentive_change(get_subnet_from_title(title), _fields)
-    for i, field in enumerate(_fields):
-        change = change_data.get(field['title'])
-        if change:
-            change = f'+{change}' if change > 0 else change
-            _fields[i]['value'] = f"{_fields[i]['value']} `{change}%`"
+    try:
+        _fields = fields.copy()
+        change_data = get_incentive_change(get_subnet_from_title(title), _fields)
+        for i, field in enumerate(_fields):
+            change = change_data.get(field['title'])
+            if change:
+                change = f'+{change}' if change > 0 else change
+                _fields[i]['value'] = f"{_fields[i]['value']} `{change}%`"
+    except Exception as e:
+        print(f'Failed to add incentive with error: {e}')
+        return fields
 
     return _fields
 
